@@ -17,4 +17,8 @@ router.post("/signup", signup)
 
 // router.post("/google", ) commented out temporarily
 
+// server/routes/auth.js (add this)
+router.get("/ping", (req, res) => res.send("pong"));
+
+
 export default router;
