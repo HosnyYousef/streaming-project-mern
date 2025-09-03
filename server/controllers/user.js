@@ -1,7 +1,20 @@
-export const test = (req, res) => {
-    res.json("it's successful")
+export const update = (req, res, next) => {
 }
 
-// we want to send something (req, res)
-// req, what we're getting from user
-// res, what we're sending to user
+export const deleteUser = (req, res, next) => {
+}
+
+export const getUser = (req, res, next) => {
+}
+
+export const subscribe = (req, res, next) => {
+}
+
+export const unsubscribe = (req, res, next) => {
+}
+
+export const like = (req, res, next) => {
+}
+
+export const dislike = (req, res, next) => {
+}
