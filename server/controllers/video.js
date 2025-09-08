@@ -56,7 +56,7 @@ export const getVideo = async (req, res, next) => {
 
 export const addView = async (req, res, next) => {
     try {
-        const video = await Video.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } })
+        await Video.findByIdAndUpdate(req.params.id, { $inc: { views: 1 } })
         res.status(200).json("The view has been increased")
     } catch (err) {
         next(err)
@@ -74,7 +74,7 @@ export const random = async (req, res, next) => {
 
 export const trend = async (req, res, next) => {
     try {
-        const videos = await Video.find().sort({views:-1})
+        const videos = await Video.find().sort({ views: -1 })
         res.status(200).json(videos)
     } catch (err) {
         next(err)
@@ -83,8 +83,16 @@ export const trend = async (req, res, next) => {
 
 export const sub = async (req, res, next) => {
     try {
-        const video = await Video.findById(req.params.id)
-        res.status(200).json(video)
+        const user = await User.findById(req.user.id)
+        const subscribedUsers = user.subscribedUsers
+
+        const list = Promise.all(
+            subscribedChannels.map((channelId) => {
+                return Video.find({ userId: channelId })
+            })
+        )
+
+        res.status(200).json(list)
     } catch (err) {
         next(err)
     }
