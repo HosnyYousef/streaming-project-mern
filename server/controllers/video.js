@@ -1,12 +1,16 @@
+import User from "../models/User.js";
+import Video from "../models/Video.js";
+import { createError } from "../error.js";
+
 export const addVideo = async (req, res, next) => {
-    const newVideo = new VideoColorSpace({ userId: req.user.id, ...req.body });
+    const newVideo = new Video({ userId: req.user.id, ...req.body });
     try {
-        const saveVideo = await newVideo.save()
-        res.status(200).json(saveVideo)
+        const savedVideo = await newVideo.save();
+        res.status(200).json(savedVideo);
     } catch (err) {
-        next(err)
+        next(err);
     }
-}
+};
 
 export const updateVideo = async (req, res, next) => {
     try {
@@ -84,9 +88,9 @@ export const trend = async (req, res, next) => {
 export const sub = async (req, res, next) => {
     try {
         const user = await User.findById(req.user.id)
-        const subscribedUsers = user.subscribedUsers
+        const subscribedChannels = user.subscribedUsers
 
-        const list = Promise.all(
+        const list = await Promise.all(
             subscribedChannels.map((channelId) => {
                 return Video.find({ userId: channelId })
             })
