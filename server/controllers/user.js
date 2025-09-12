@@ -1,5 +1,6 @@
 import { createError } from "../error.js";
 import User from "../models/User.js"
+import Video from "../models/Video.js";  
 
 export const update = async (req, res, next) => {
     if (req.params.id === req.user.id) {
@@ -94,7 +95,7 @@ export const dislike = async (req, res, next) => {
             $addToSet: { dislikes: id },
             $pull: { likes: id }
         })
-        res.status(200).json("The video has been liked.")
+        res.status(200).json("The video has been disliked.")
     } catch (err) {
         next(err)
     }
