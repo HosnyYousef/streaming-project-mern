@@ -10,7 +10,6 @@ router.post("/signup", signup)
 // because we are sending out information, email and password
 
 // SIGN IN
-// testing a commit 
 
 router.post("/signin", signin) 
 
