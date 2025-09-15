@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import Card from "../components/Card";
 
@@ -7,6 +7,14 @@ const Container = styled.div`
   justify-content: space-between;
   flex-wrap: wrap;
 `;
+
+const [video, setVideos] = useState([])
+
+useEffect(() => {
+  const fetchVideos = async ()=> {
+
+  }
+}, [])
 
 const Home = () => {
   return (
