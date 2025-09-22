@@ -9,7 +9,7 @@ const Container = styled.div`
   flex-wrap: wrap;
 `;
 
-const Home = () => {
+const Home = ({type}) => {
   const [videos, setVideos] = useState([])
 
   useEffect(() => {
