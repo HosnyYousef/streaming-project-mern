@@ -13,9 +13,9 @@ export const userSlice = createSlice({
     loginStart: (state) => {
       state.loading = true;
     },
-    loginSuccess: (state) => {
+    loginSuccess: (state, action) => {
       state.loading = false
-      state.loading = isAction.payLoad;
+      state.loading = action.payLoad;
     },
     loginFailure: (state) => {
       state.loading = false
@@ -32,4 +32,5 @@ export const userSlice = createSlice({
 export const { loginStart, loginSuccess, loginFailure, logout, subscription } =
   userSlice.actions;
 
-export default userSlice
+
+export default userSlice.reducer

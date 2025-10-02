@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
-import { loginFailure } from "../redux/userSlice";
+import { loginStart, loginSuccess, loginFailure } from "../redux/userSlice";
+import { useDispatch } from "react-redux";
 
 const Container = styled.div`
   display: flex;
