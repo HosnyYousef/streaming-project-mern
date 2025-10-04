@@ -4,7 +4,6 @@ import userReducer from './userSlice'
 // const store = createStore(rootReducer, composeWithDevTooks(applyMiddleware(logger)))
 
 export const store = configureStore({
-  reducer: {
-    user: userReducer,
-  },
+  reducer: { user: userReducer },
+  devTools: { name: "video_app", trace: true },
 })
