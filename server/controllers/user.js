@@ -45,13 +45,15 @@ export const getUser = async (req, res, next) => {
 
 export const subscribe = async (req, res, next) => {
   try {
-    await User.findByIdAndUpdate(req.user.id, {
-      $push: { subscribedUsers: req.params.id },
-    });
-    await User.findByIdAndUpdate(req.params.id, {
-      $inc: { subscribers: 1 },
-    });
-    res.status(200).json("Subscription successfull.")
+    const me = req.user.id.toString();
+    const targetId = req.params.id.toString();
+
+    if (me === targetId) {
+      return next(createError(400, "You can't subscribe to yourself."));
+    }
+    await User.findByIdAndUpdate(me, { $addToSet: { subscribedUsers: targetId } });
+    await User.findByIdAndUpdate(targetId, { $inc: { subscribers: 1 } });
+    res.status(200).json("Subscription success.");
   } catch (err) {
     next(err);
   }

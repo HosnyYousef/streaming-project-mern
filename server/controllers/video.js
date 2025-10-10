@@ -86,21 +86,31 @@ export const trend = async (req, res, next) => {
 }
 
 export const sub = async (req, res, next) => {
-    try {
-        const user = await User.findById(req.user.id)
-        const subscribedChannels = user.subscribedUsers
+  try {
+    const me = req.user.id.toString();
 
-        const list = await Promise.all(
-            subscribedChannels.map((channelId) => {
-                return Video.find({ userId: channelId })
-            })
-        )
+    // 1) load only what we need
+    const u = await User.findById(me).select('subscribedUsers').lean();
+    const subscribedUsers = u?.subscribedUsers || [];
 
-        res.status(200).json(list.flat().sort((a, b) => b.createdAt - a.createdAt))
-    } catch (err) {
-        next(err)
-    }
-}
+    // 2) normalize to strings, remove self, dedupe
+    const subscribedIds = [...new Set(subscribedUsers.map(String))].filter(id => id !== me);
+
+    // 3) single efficient query, also excluding self in the matcher
+    const videos = await Video.find({
+      userId: { $in: subscribedIds, $ne: me }
+    })
+      .sort({ createdAt: -1 })
+      .lean();
+
+    // 4) last-line defense in case of type weirdness
+    const cleaned = videos.filter(v => String(v.userId) !== me);
+
+    res.status(200).json(cleaned);
+  } catch (err) {
+    next(err);
+  }
+};
 
 export const getByTag = async (req, res, next) => {
     const tags = req.query.tags.split(",")
@@ -115,7 +125,7 @@ export const getByTag = async (req, res, next) => {
 export const search = async (req, res, next) => {
     const query = req.query.q
     try {
-        const videos = await Video.find({title: { $regex: query, $options: "i" }, }).limit(40)
+        const videos = await Video.find({ title: { $regex: query, $options: "i" }, }).limit(40)
         res.status(200).json(videos)
     } catch (err) {
         next(err)
