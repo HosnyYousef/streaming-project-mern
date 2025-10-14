@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import { loginStart, loginSuccess, loginFailure } from "../redux/userSlice";
+import { auth, provider } from "../firebase"
+import { signInWithPopup } from "firebase/auth"
 import { useDispatch } from "react-redux";
 
 const Container = styled.div`
@@ -83,6 +85,29 @@ const SignIn = () => {
     }
   }
 
+const signInWithGoogle = async () => {
+  dispatch(loginStart());
+  try {
+    const result = await signInWithPopup(auth, provider);
+
+    // 👇 Add this line to see the full Firebase response
+    console.log("Google login result:", result);
+
+    const u = result.user;
+    // minimal user shape for your UI
+    const user = {
+      _id: u.uid,
+      name: u.displayName,
+      email: u.email,
+      img: u.photoURL,
+    };
+    dispatch(loginSuccess(user));
+  } catch (err) {
+    console.error(err);
+    dispatch(loginFailure());
+  }
+};
+
   return (
     <Container>
       <Wrapper>
@@ -91,6 +116,8 @@ const SignIn = () => {
         <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
         <Input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
         <Button onClick={handleLogin} >Sign in</Button>
+        <Title>or</Title>
+        <button onClick={signInWithGoogle}>Sign with Google</button>
         <Title>or</Title>
         <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
         <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
