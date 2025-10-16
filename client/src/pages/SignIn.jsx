@@ -86,26 +86,20 @@ const SignIn = () => {
   }
 
 const signInWithGoogle = async () => {
-  dispatch(loginStart());
-  try {
-    const result = await signInWithPopup(auth, provider);
-
-    // 👇 Add this line to see the full Firebase response
-    console.log("Google login result:", result);
-
-    const u = result.user;
-    // minimal user shape for your UI
-    const user = {
-      _id: u.uid,
-      name: u.displayName,
-      email: u.email,
-      img: u.photoURL,
-    };
-    dispatch(loginSuccess(user));
-  } catch (err) {
-    console.error(err);
-    dispatch(loginFailure());
-  }
+  dispatch(loginStart())
+  signInWithPopup(auth, provider)
+    .then((result) => {
+      axios.post("/auth/google", {
+        name:result.user.displayName,
+        email:result.user.email,
+        img:result.user.photoURL,
+      }).then((res) => {
+        dispatch(loginSuccess(res.data))
+      })
+    })
+    .catch((error) => {
+      dispatch(loginFailure())
+    });
 };
 
   return (
