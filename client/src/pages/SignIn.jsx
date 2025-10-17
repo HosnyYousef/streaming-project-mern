@@ -111,7 +111,7 @@ const signInWithGoogle = async () => {
         <Input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
         <Button onClick={handleLogin} >Sign in</Button>
         <Title>or</Title>
-        <button onClick={signInWithGoogle}>Sign with Google</button>
+        <button onClick={signInWithGoogle}>Sign in with Google</button>
         <Title>or</Title>
         <Input placeholder="username" onChange={(e) => setName(e.target.value)} />
         <Input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
