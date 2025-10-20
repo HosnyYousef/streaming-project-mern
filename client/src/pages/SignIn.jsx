@@ -85,11 +85,13 @@ const SignIn = () => {
     }
   }
 
-const signInWithGoogle = async () => {
+const signInWithGoogle = () => {
   dispatch(loginStart())
   signInWithPopup(auth, provider)
     .then((result) => {
-      axios.post("/auth/google", {
+      console.log(result);
+
+      return axios.post("/api/auth/google", {
         name:result.user.displayName,
         email:result.user.email,
         img:result.user.photoURL,

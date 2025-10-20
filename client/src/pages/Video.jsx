@@ -1,4 +1,4 @@
-import React from "react";
+import React, { use, useEffect, useState } from "react"; 
 import styled from "styled-components";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
 import ThumbDownOffAltOutlinedIcon from "@mui/icons-material/ThumbDownOffAltOutlined";
@@ -7,6 +7,8 @@ import AddTaskOutlinedIcon from "@mui/icons-material/AddTaskOutlined";
 import Comments from "../components/Comments";
 import Card from "../components/Card";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import axios from "axios";   
 
 const Container = styled.div`
   display: flex;
@@ -106,10 +108,33 @@ const Subscribe = styled.button`
 `;
 
 const Video = () => {
+  const { currentUser } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
 
-  const { currentUser } = useSelector(state => state.user)
-  const dispatch = useDispatch()
+  // 1) Get the full location object (this is what has pathname/search/state/key)
+  const location = useLocation();
+  console.log(location); // <-- shows { pathname, search, state, key }
 
+  // 2) Derive the array like in the tutorial
+  const path = location.pathname.split("/")[2];
+
+  const [video, setVideo] = useState({})
+  const [channel, setChannel] = useState({})
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const videoRes = await axios.get(`/videos/find/${path}`)
+        const channelRes = await axios.get(`/users/find/${videoRes.userId}`)
+
+        setVideo(videoRes.data)
+        setChannel(channelRes.data)
+      } catch (err) { }
+    }
+    fetchData()
+  }, [path])
+
+  console.log(path); // <-- shows ["", "video", "<id>"]
 
   return (
     <Container>
@@ -161,7 +186,7 @@ const Video = () => {
           <Subscribe>SUBSCRIBE</Subscribe>
         </Channel>
         <Hr />
-        <Comments/>
+        <Comments />
       </Content>
       {/* <Recommendation>
         <Card type="sm"/>
