@@ -23,6 +23,7 @@ const Container = styled.div`
 const Content = styled.div`
   flex: 5;
 `;
+
 const VideoWrapper = styled.div`
   aspect-ratio: 16 / 9;   /* keeps a blank box while loading */
   width: 100%;
@@ -223,7 +224,7 @@ const Video = () => {
           </Subscribe>
         </Channel>
         <Hr />
-        <Comments />
+        <Comments videoId={currentVideo._id} />
       </Content>
       {/* <Recommendation>
         <Card type="sm"/>
